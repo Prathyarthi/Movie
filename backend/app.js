@@ -1,5 +1,6 @@
 import express from 'express'
 import movieRoutes from './routes/movieRoutes.js'
+import cors from 'cors'
 // import bookingRoutes from './routes/bookingRoutes';
 
 const app = express()
