@@ -1,5 +1,4 @@
 import connectToDb from '../db/index.js'
-import mysql from 'mysql2/promise';
 
 const getAllMovies = async (req, res) => {
     const connection = await connectToDb();
