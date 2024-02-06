@@ -49,7 +49,7 @@ const createTheatre = async (req, res) => {
             });
         }
         else {
-            const createTheatreQuery = ('INSERT INTO Movies (MovieName, ReleaseDate, Genre, Duration) VALUES (?,?,?,?)')
+            const createTheatreQuery = ('INSERT INTO THEATRES (theatreName, location, capacity) VALUES (?,?,?)')
 
             const theatreValues = [theatreName, location, capacity];
 
