@@ -5,7 +5,6 @@ config()
 const isLoggedIn = async (req, res, next) => {
 
     const { token } = req.cookies;
-
     if (!token) {
         res.status(400).json({
             success: false,
@@ -24,6 +23,7 @@ const isLoggedIn = async (req, res, next) => {
             success: false,
             message: "Unauthorized, please login to continue"
         })
+        console.log(err);
     }
 };
 

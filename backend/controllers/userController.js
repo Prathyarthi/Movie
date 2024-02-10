@@ -122,8 +122,6 @@ const signin = async (req, res, next) => {
         const userExistsValues = [email]
         const [userExistsQuery] = await connection.query(userExists, userExistsValues);
 
-        // const [pwd] = await connection.query("SELECT PASSWORD FROM USERS WHERE EMAIL=", email)
-
         if (userExistsQuery.length === 0) {
             res.status(400).json({
                 success: false,
@@ -158,9 +156,51 @@ const signin = async (req, res, next) => {
 };
 
 
+const getUser = async (req, res) => {
+    const userId = req.userId;
+    console.log(userId);
+    const connection = await connectToDb()
+    try {
+        const user = await connection.query(`SELECT USERNAME , EMAIL FROM USERS WHERE ID=${userId}`)
+
+        if (!user) {
+            res.status(400).json({
+                success: false,
+                message: "User not found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: user
+        });
+    } catch (error) {
+        return res.status(400).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
+const logout = async (req, res) => {
+    try {
+        res.clearCookie("token")
+
+        res.status(200).json({
+            success: true,
+            message: "Logout successfull"
+        })
+    } catch (e) {
+        return res.status(400).json({
+            success: false,
+            message: e.message
+        });
+    }
+}
+
 export {
     signup,
     signin,
-    // getUser,
-    // logout
+    getUser,
+    logout
 }
