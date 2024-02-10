@@ -3,11 +3,9 @@ import connectToDb from '../db/index.js'
 import jwt from "jsonwebtoken";
 import { config } from 'dotenv';
 config();
-import bcrypt from 'bcrypt'
 
 const signupSchema = zod.object({
-    firstName: zod.string(),
-    lastName: zod.string(),
+    username: zod.string(),
     email: zod.string().email(),
     password: zod.string().min(8)
 })
@@ -16,7 +14,7 @@ const signupSchema = zod.object({
 const signup = async (req, res) => {
 
     const { username, email, password } = req.body;
-    const connection = connectToDb()
+    const connection = await connectToDb()
 
     try {
 
@@ -57,34 +55,34 @@ const signup = async (req, res) => {
         }
         else {
             const userQuery = (`
-                INSERT INTO USERS (USERNAME,EMAIL,PASSWORD) VALUES (?,?,?,?)
+                INSERT INTO USERS (USERNAME,EMAIL,PASSWORD) VALUES (?,?,?)
             `)
 
             const userValues = [username, email, password]
 
-            const user = await connection.query(userQuery, userValues)
+            const [user] = await connection.query(userQuery, userValues)
 
             console.log("User created");
             if (!user) {
                 return res.status(500).send("Server Error")
             }
+
+            const userId = user.insertId
+            console.log(userId);
+
+            const token = jwt.sign({
+                userId,
+            }, process.env.JWT_SECRET)
+
+            res.cookie("token", token)
+
+            return res.status(200).json({
+                success: true,
+                message: "User created successfully",
+                token: token,
+                user
+            })
         }
-
-
-        const userId = user.id
-
-        const token = jwt.sign({
-            userId,
-        }, process.env.JWT_SECRET)
-
-        res.cookie("token", token)
-
-        return res.status(200).json({
-            success: true,
-            message: "User created successfully",
-            token: token,
-            user
-        })
     } catch (error) {
         console.log(error);
         return res.status(400).json({
@@ -103,11 +101,9 @@ const signinSchema = zod.object({
 
 const signin = async (req, res, next) => {
 
-    async function comparePassword(password) {
-        return await bcrypt.compare(password, this.password)
-    }
-
     const { email, password } = req.body;
+
+    const connection = await connectToDb()
 
     const signinParsed = signinSchema.safeParse(req.body)
 
@@ -119,41 +115,40 @@ const signin = async (req, res, next) => {
     }
 
     try {
-        const userExists = (`SELECT * FROM USERS
+        const userExists = (`SELECT EMAIL,PASSWORD FROM USERS
         WHERE EMAIL=?
         `)
 
         const userExistsValues = [email]
         const [userExistsQuery] = await connection.query(userExists, userExistsValues);
 
-        if (userExistsQuery.length < 0) {
+        // const [pwd] = await connection.query("SELECT PASSWORD FROM USERS WHERE EMAIL=", email)
+
+        if (userExistsQuery.length === 0) {
             res.status(400).json({
                 success: false,
                 message: "User doesn't exist"
             })
         }
-        else {
-            await bcrypt.hash(password, 10);
-            const validPassword = await userExistsQuery.comparePassword(password)
-            if (!validPassword) {
-                return res.status(401).send("Password is incorrect")
-            }
+
+        if (password !== userExistsQuery[0].PASSWORD) {
+            return res.status(401).send("Password is incorrect")
         }
 
-        //     const token = jwt.sign({
-        //         userId: userExists._id,
-        //         role: userExists.role
-        //     }, process.env.JWT_SECRET)
+        const token = jwt.sign({
+            userId: userExistsQuery.id,
+        }, process.env.JWT_SECRET)
 
-        //     res.cookie("token", token)
+        res.cookie("token", token)
 
-        //     res.status(200).json({
-        //         success: true,
-        //         message: "User logged in successfully",
-        //         token: token,
-        //         userExists
-        //     })
-        //     return
+        res.status(200).json({
+            success: true,
+            message: "User logged in successfully",
+            token: token,
+            userExistsQuery
+        })
+        return
+
     } catch (error) {
         return res.status(400).json({
             success: false,
@@ -166,6 +161,6 @@ const signin = async (req, res, next) => {
 export {
     signup,
     signin,
-    getUser,
-    logout
+    // getUser,
+    // logout
 }

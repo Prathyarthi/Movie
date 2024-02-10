@@ -1,5 +1,5 @@
 import express from 'express';
-import { createShowtime, getAllShowtimes } from '../controllers/showtimeController';
+import { createShowtime, getAllShowtimes } from '../controllers/showtimeController.js';
 
 const router = express.Router()
 
