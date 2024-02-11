@@ -8,7 +8,6 @@ function Appbar() {
     useEffect(() => {
         axiosInstance.get("/users/getUser")
             .then(res => {
-                // console.log(res.data.user);
                 setName(res.data.user.USERNAME)
             })
     }, [])
