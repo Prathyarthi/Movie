@@ -19,11 +19,11 @@ const isLoggedIn = async (req, res, next) => {
         }
 
     } catch (err) {
+        console.error(err);
         res.status(400).json({
             success: false,
             message: "Unauthorized, please login to continue"
         })
-        console.log(err);
     }
 };
 

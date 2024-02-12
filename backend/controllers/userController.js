@@ -115,7 +115,7 @@ const signin = async (req, res, next) => {
     }
 
     try {
-        const userExists = (`SELECT EMAIL,PASSWORD FROM USERS
+        const userExists = (`SELECT EMAIL,PASSWORD,ID FROM USERS
         WHERE EMAIL=?
         `)
 
@@ -134,7 +134,7 @@ const signin = async (req, res, next) => {
         }
 
         const token = jwt.sign({
-            userId: userExistsQuery.id,
+            userId: userExistsQuery[0].ID,
         }, process.env.JWT_SECRET)
 
         res.cookie("token", token)

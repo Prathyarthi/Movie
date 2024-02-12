@@ -38,6 +38,7 @@ const createTheatre = async (req, res) => {
         WHERE THEATRENAME=?
         AND LOCATION=?
           `)
+
         const existingTheatreQueryValues = [theatreName, location]
 
         const [existingTheatre] = await connection.query(existingTheatreQuery, existingTheatreQueryValues)
@@ -49,7 +50,7 @@ const createTheatre = async (req, res) => {
             });
         }
         else {
-            const createTheatreQuery = ('INSERT INTO THEATRES (theatreName, location, capacity) VALUES (?,?,?)')
+            const createTheatreQuery = ('INSERT INTO THEATRES (THEATRENAME, LOCATION, CAPACITY) VALUES (?,?,?)')
 
             const theatreValues = [theatreName, location, capacity];
 
