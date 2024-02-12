@@ -1,4 +1,4 @@
-import connection from '../db/index.js';
+import connectToDb from '../db/index.js';
 
 export const getAllBookings = async (req, res) => {
 
@@ -31,13 +31,13 @@ export const createBooking = async (req, res) => {
         if (bookingTables.length === 0) {
             await connection.query(`
             CREATE TABLE BOOKINGS(
-            (BookingID INT PRIMARY KEY AUTO_INCREMENT,
-            UserId INT,
+            BookingID INT PRIMARY KEY AUTO_INCREMENT,
+            USERID INT,
             ShowtimeID INT,
             NumTickets INT,
             TotalAmount INT,
-            BookingDate TIMESTAMP,
-            FOREIGN KEY(UserId) REFERENCES Users(UserId),
+            BookingDate DATE,
+            FOREIGN KEY(UserId) REFERENCES Users(ID),
             FOREIGN KEY(ShowtimeID) REFERENCES Showtimes(ShowtimeID)
             )
             `)
