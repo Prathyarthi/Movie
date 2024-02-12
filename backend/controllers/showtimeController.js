@@ -19,7 +19,14 @@ const getAllShowtimes = async (req, res) => {
 }
 
 const createShowtime = async (req, res) => {
-    const { MovieId, TheaterId, StartTime, EndTime } = req.body;
+    const { MovieId, TheatreId, StartTime, EndTime } = req.body;
+
+    if (!MovieId || !TheatreId || !StartTime || !EndTime) {
+        return res.status(400).json({
+            success: false,
+            message: "MovieId, TheatreId, StartTime, and EndTime are required fields."
+        });
+    }
 
     const connection = await connectToDb();
 
@@ -29,22 +36,23 @@ const createShowtime = async (req, res) => {
         if (showtimeTables.length === 0) {
             await connection.query(`
                 CREATE TABLE SHOWTIMES (
-                    ShowtimeID INT PRIMARY KEY AUTO_INCREMENT,
-                    MovieID INT,
-                    TheaterID INT,
-                    StartTime TIMESTAMP,
-                    EndTime TIMESTAMP,
-                    FOREIGN KEY (MovieID) REFERENCES Movies(MovieID),
-                    FOREIGN KEY (TheaterID) REFERENCES Theaters(TheaterID)
+                    SHOWTIMEID INT PRIMARY KEY AUTO_INCREMENT,
+                    MOVIEID INT,
+                    THEATREID INT,
+                    STARTTIME INT,
+                    ENDTIME INT,
+                    FOREIGN KEY (MOVIEID) REFERENCES MOVIES(MOVIEID),
+                    FOREIGN KEY (THEATREID) REFERENCES THEATRES(THEATREID)
                 );
             `);
         }
 
-        const existingShowtimeQuery = (`SELECT * FROM SHOWTIMES 
-        WHERE ShowtimeID=?
+        const existingShowtimeQuery = (`SELECT MOVIEID,THEATREID 
+        FROM SHOWTIMES 
+        WHERE MOVIEID = ? AND THEATREID = ?
           `)
 
-        const existingShowtimeQueryValues = [ShowtimeID]
+        const existingShowtimeQueryValues = [MovieId, TheatreId]
 
         const [existingShowtime] = await connection.query(existingShowtimeQuery, existingShowtimeQueryValues)
 
@@ -55,9 +63,9 @@ const createShowtime = async (req, res) => {
             });
         }
         else {
-            const createShowtimeQuery = ('INSERT INTO Movies (MovieId, TheaterId, StartTime, EndTime ) VALUES (?,?,?,?)')
+            const createShowtimeQuery = ('INSERT INTO SHOWTIMES (MovieId, TheatreId, StartTime, EndTime ) VALUES (?,?,?,?)')
 
-            const showtimeValues = [MovieId, TheaterId, StartTime, EndTime];
+            const showtimeValues = [MovieId, TheatreId, StartTime, EndTime];
 
             await connection.query(createShowtimeQuery, showtimeValues)
 
