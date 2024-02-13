@@ -5,7 +5,9 @@ function Appbar() {
 
     const [name, setName] = useState("")
     useEffect(() => {
-        axios.get("http://localhost:8000/api/v1/users/getUser")
+        axios.get("http://localhost:8000/api/v1/users/getUser", {
+            withCredentials: true,
+        })
             .then((res) => {
                 console.log(res.data.user.username);
                 setName(res.data.user.username)
