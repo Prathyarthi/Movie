@@ -4,7 +4,7 @@ config()
 
 const isLoggedIn = async (req, res, next) => {
 
-    const { token } = req.cookies;
+    const token  = (req.cookies && req.cookies.token) || null;
     if (!token) {
         res.status(400).json({
             success: false,
@@ -15,7 +15,7 @@ const isLoggedIn = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded.userId) {
             req.userId = decoded.userId;
-            next();
+            return next();
         }
 
     } catch (err) {

@@ -66,7 +66,6 @@ const signup = async (req, res) => {
             if (!user) {
                 return res.status(500).send("Server Error")
             }
-
             const userId = user.insertId
             console.log(userId);
 
@@ -74,13 +73,20 @@ const signup = async (req, res) => {
                 userId,
             }, process.env.JWT_SECRET)
 
-            res.cookie("token", token)
+            res.cookie("token", token, { httpOnly: true })
+
+            const newUser = (`SELECT USERNAME,EMAIL FROM USERS
+        WHERE ID=?
+        `)
+
+            const newUserValues = [userId]
+            const [newUserQuery] = await connection.query(newUser, newUserValues);
 
             return res.status(200).json({
                 success: true,
                 message: "User created successfully",
                 token: token,
-                user
+                newUserQuery
             })
         }
     } catch (error) {
@@ -137,7 +143,7 @@ const signin = async (req, res, next) => {
             userId: userExistsQuery[0].ID,
         }, process.env.JWT_SECRET)
 
-        res.cookie("token", token)
+        res.cookie("token", token, { httpOnly: true })
 
         res.status(200).json({
             success: true,
@@ -161,7 +167,7 @@ const getUser = async (req, res) => {
     console.log(userId);
     const connection = await connectToDb()
     try {
-        const user = await connection.query(`SELECT USERNAME , EMAIL FROM USERS WHERE ID=${userId}`)
+        const [user] = await connection.query(`SELECT USERNAME , EMAIL FROM USERS WHERE ID=${userId}`)
 
         if (!user) {
             res.status(400).json({
@@ -172,7 +178,7 @@ const getUser = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            data: user
+            user
         });
     } catch (error) {
         return res.status(400).json({
