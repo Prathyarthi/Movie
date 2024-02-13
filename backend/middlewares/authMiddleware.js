@@ -4,9 +4,9 @@ config()
 
 const isLoggedIn = async (req, res, next) => {
 
-    const token  = (req.cookies && req.cookies.token) || null;
+    const token = (req.cookies && req.cookies.token) || null;
     if (!token) {
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: "Could not find token"
         })
@@ -20,7 +20,7 @@ const isLoggedIn = async (req, res, next) => {
 
     } catch (err) {
         console.error(err);
-        res.status(400).json({
+        return res.status(400).json({
             success: false,
             message: "Unauthorized, please login to continue"
         })

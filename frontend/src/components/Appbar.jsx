@@ -4,15 +4,20 @@ import React, { useEffect, useState } from 'react'
 function Appbar() {
 
     const [name, setName] = useState("")
-    useEffect(() => {
-        axios.get("http://localhost:8000/api/v1/users/getUser", {
-            withCredentials: true,
-        })
-            .then((res) => {
-                console.log(res.data.user.username);
-                setName(res.data.user.username)
+    try {
+        useEffect(() => {
+            axios.get("http://localhost:8000/api/v1/users/getUser", {
+                withCredentials: true,
             })
-    })
+                .then((res) => {
+                    console.log(res.data.user.username);
+                    setName(res.data.user.username)
+                })
+        }, [])
+    } catch (error) {
+        console.log(error);
+    }
+
     return (
         <div className="shadow h-14 flex justify-between">
             <div className="flex flex-col justify-center h-full ml-4">

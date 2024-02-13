@@ -41,7 +41,7 @@ export const Signup = () => {
               error: "Signup failed!"
             })
             response = await response
-            // localStorage.setItem("token", response.data.token)
+            localStorage.setItem("token", response.data.token)
             navigate('/dashboard')
           }} label={"Sign up"} />
         </div>
