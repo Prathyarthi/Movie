@@ -5,14 +5,17 @@ config()
 const isLoggedIn = async (req, res, next) => {
 
     const token = (req.cookies && req.cookies.token) || null;
+    // const token = req.cookies.token
+    console.log(token);
     if (!token) {
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             message: "Could not find token"
         })
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        // console.log(decoded.userId);
         if (decoded.userId) {
             req.userId = decoded.userId;
             return next();
@@ -20,16 +23,36 @@ const isLoggedIn = async (req, res, next) => {
 
     } catch (err) {
         console.error(err);
-        return res.status(400).json({
+        res.status(400).json({
             success: false,
             message: "Unauthorized, please login to continue"
         })
     }
+    // try {
+    //     const token = req.cookies.token
+    //     console.log(token);
+    //     if (!token) {
+    //         res.status(400).json({
+    //             success: false,
+    //             message: "Could not find token"
+    //         })
+    //     }
+
+    //     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
+
+    //     // req.user = decodedToken.user;
+    //     req.userId = decodedToken.userId;
+    //     // console.log("User :", user);
+    //     // console.log(req.user);
+    //     next()
+    // } catch (error) {
+    //     console.log(error);
+    // }
 };
 
 const adminMiddleware = (...roles) =>
     async (req, res, next) => {
-        const { token } = req.cookies;
+        const token = req.cookies.token;
 
         if (!token) {
             res.status(400).json({

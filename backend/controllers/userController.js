@@ -48,7 +48,7 @@ const signup = async (req, res) => {
         const [userExistsQuery] = await connection.query(userExists, userExistsValues);
 
         if (userExistsQuery.length > 0) {
-            return res.json({
+            res.json({
                 success: false,
                 message: 'User already exists'
             });
@@ -145,12 +145,13 @@ const signin = async (req, res, next) => {
 
         res.cookie("token", token, { httpOnly: true })
 
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
             message: "User logged in successfully",
             token: token,
             userExistsQuery
         })
+        return
 
     } catch (error) {
         return res.status(400).json({
@@ -163,10 +164,12 @@ const signin = async (req, res, next) => {
 
 const getUser = async (req, res) => {
     const userId = req.userId;
-    console.log(userId);
+    // console.log(userId);
     const connection = await connectToDb()
     try {
         const [user] = await connection.query(`SELECT USERNAME , EMAIL FROM USERS WHERE ID=${userId}`)
+
+        // console.log(user[0].USERNAME);
 
         if (!user) {
             res.status(400).json({
@@ -177,7 +180,7 @@ const getUser = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            user
+            user: user[0]
         });
     } catch (error) {
         return res.status(400).json({

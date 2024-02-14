@@ -3,7 +3,7 @@ config()
 import app from './app.js'
 import connectToDb from './db/index.js';
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
     res.send("Hi")
 })
 
