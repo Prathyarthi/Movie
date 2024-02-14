@@ -1,5 +1,4 @@
 import { useState } from "react"
-import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import Heading from "../components/Heading";
 import Sub_Heading from "../components/Sub_Heading";
@@ -7,6 +6,7 @@ import Input_box from "../components/Input_box";
 import Button from "../components/Button";
 import Bottom_warning from "../components/Bottom_warning";
 import { toast } from "react-hot-toast";
+import axiosInstance from "../axiosInstance";
 
 export const Signup = () => {
   const [username, setUsername] = useState("");
@@ -30,7 +30,7 @@ export const Signup = () => {
         }} placeholder="12345678" label={"Password"} />
         <div className="pt-4">
           <Button onClick={async () => {
-            let response = axios.post("http://localhost:8000/api/v1/users/signup", {
+            let response = axiosInstance.post("/users/signup", {
               username,
               email,
               password
@@ -41,7 +41,7 @@ export const Signup = () => {
               error: "Signup failed!"
             })
             response = await response
-            localStorage.setItem("token", response.data.token)
+            // localStorage.setItem("token", response.data.token)
             navigate('/dashboard')
           }} label={"Sign up"} />
         </div>
@@ -50,4 +50,3 @@ export const Signup = () => {
     </div>
   </div>
 }
-

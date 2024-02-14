@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Heading from '../components/Heading'
 import Sub_Heading from '../components/Sub_Heading'
 import Input_box from '../components/Input_box'
 import Button from '../components/Button'
 import Bottom_warning from '../components/Bottom_warning'
-import axios from 'axios'
+import axiosInstance from '../axiosInstance'
 import { useNavigate } from "react-router-dom"
 import { toast } from 'react-hot-toast'
-
 function Signin() {
 
   const [email, setEmail] = useState("")
@@ -29,7 +28,7 @@ function Signin() {
           }} placeholder="Ex: John@123#" label={"Password"} />
           <div className="pt-4">
             <Button onClick={async () => {
-              let response = axios.post("http://localhost:8000/api/v1/users/signin", {
+              let response = axiosInstance.post("/users/signin", {
                 email,
                 password
               })
@@ -39,7 +38,7 @@ function Signin() {
                 error: "Signin failed!"
               })
               response = await response
-              localStorage.setItem("token", response.data.token)
+              // localStorage.setItem("token", response.data.token)
               navigate('/dashboard')
             }}
               label={"Sign in"} />
