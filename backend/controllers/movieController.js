@@ -57,7 +57,8 @@ const createMovie = async (req, res) => {
 
             res.json({
                 success: true,
-                message: 'Movie created successfully'
+                message: 'Movie created successfully',
+                
             });
         }
     } catch (error) {

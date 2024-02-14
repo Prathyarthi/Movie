@@ -3,7 +3,7 @@ import axiosInstance from '../axiosInstance'
 
 function Appbar() {
 
-    const [name, setName] = useState("busari")
+    const [name, setName] = useState("")
     // console.log(localStorage.getItem("token"))
     useEffect(() => {
         axiosInstance.get("/users/getUser")
@@ -19,7 +19,7 @@ function Appbar() {
             </div>
             <div className="flex">
                 <div className="flex flex-col justify-center h-full mr-4">
-                    {name}
+                    {name.toUpperCase()}
                 </div>
                 <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
                     <div className="flex flex-col justify-center h-full text-xl">
