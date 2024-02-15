@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import MovieCard from '../components/MovieCard'
 import axios from 'axios'
+import axiosInstance from '../axiosInstance'
 
 function Book() {
     const [details, setDetails] = useState([])
 
     useEffect(() => {
-        axios.post("http://localhost:8000/movies/getAllMovies")
+        axiosInstance.post("/movies/getAllMovies")
             .then(async (res) => {
                 setDetails(res.data.movies)
             })
