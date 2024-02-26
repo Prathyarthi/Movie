@@ -12,7 +12,7 @@ export const getAllBookings = async (req, res) => {
             message: "Fetched all showtimes",
             bookings
         })
-    } catch (error) { 
+    } catch (error) {
         console.error('Error fetching bookings:', error);
         res.status(500).json({
             error: 'Internal Server Error'
@@ -21,8 +21,8 @@ export const getAllBookings = async (req, res) => {
 };
 
 export const createBooking = async (req, res) => {
-    const { UserId, ShowtimeID, NumTickets, TotalAmount, BookingDate } = req.body;
-
+    const { UserId, NumTickets, TotalAmount, BookingDate } = req.body;
+    console.log(UserId, NumTickets, TotalAmount, BookingDate);
     const connection = await connectToDb();
 
     try {
@@ -33,19 +33,17 @@ export const createBooking = async (req, res) => {
             CREATE TABLE BOOKINGS(
             BookingID INT PRIMARY KEY AUTO_INCREMENT,
             USERID INT,
-            ShowtimeID INT,
             NumTickets INT,
             TotalAmount INT,
             BookingDate DATE,
             FOREIGN KEY(UserId) REFERENCES Users(ID),
-            FOREIGN KEY(ShowtimeID) REFERENCES Showtimes(ShowtimeID)
             )
             `)
         }
 
-        const createBookingQuery = ('INSERT INTO BOOKINGS (UserId, ShowtimeID, NumTickets, TotalAmount, BookingDate) VALUES (?, ?, ?, ?, ?)')
+        const createBookingQuery = ('INSERT INTO BOOKINGS (UserId, NumTickets, TotalAmount, BookingDate) VALUES (?, ?, ?, ?)')
 
-        const createBookingQueryValues = [UserId, ShowtimeID, NumTickets, TotalAmount, BookingDate];
+        const createBookingQueryValues = [UserId, NumTickets, TotalAmount, BookingDate];
 
         await connection.query(createBookingQuery, createBookingQueryValues)
 

@@ -18,7 +18,7 @@ function Appbar() {
                 MOVIE
             </div>
             <div className="flex">
-                <div className="flex flex-col justify-center h-full mr-4">
+                <div className="flex flex-col justify-center h-full mr-4 text-white">
                     {name.toUpperCase()}
                 </div>
                 <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">

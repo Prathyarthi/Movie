@@ -4,9 +4,9 @@ import CardContainer from "../components/CardContainer"
 
 
 export const Dashboard = () => {
-  return <div className="bg-slate-300">
+  return <div className="bg-slate-900">
     <Appbar />
-    <div className="m-8">
+    <div className="">
       <CardContainer />
     </div>
   </div>

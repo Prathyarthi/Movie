@@ -148,6 +148,7 @@ const signin = async (req, res, next) => {
         res.status(200).json({
             success: true,
             message: "User logged in successfully",
+            userId: userExistsQuery[0].ID,
             token: token,
             userExistsQuery
         })
