@@ -25,7 +25,15 @@ export const createBooking = async (req, res) => {
     console.log(UserId, NumTickets, TotalAmount, BookingDate);
     const connection = await connectToDb();
 
-    try {
+    const currentDate = new Date();
+    const bookingDateTime = new Date(BookingDate);
+    if (bookingDateTime < currentDate) {
+        return res.status(400).json({
+            error: 'Booking date cannot be in the past'
+        });
+    }
+
+    try { 
         const [bookingTables] = await connection.query("SHOW TABLES LIKE 'BOOKINGS'");
 
         if (bookingTables.length === 0) {
