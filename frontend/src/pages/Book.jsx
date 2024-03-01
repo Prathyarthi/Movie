@@ -4,8 +4,9 @@ import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const Book = () => {
-    const [tickets, setTickets] = useState(0);
+    const [tickets, setTickets] = useState(1);
     const [date, setDate] = useState('');
+    const [session, setSession] = useState('morning');
     const navigate = useNavigate()
 
     const userId = localStorage.getItem('userId')
@@ -15,8 +16,9 @@ const Book = () => {
             const res = await axiosInstance.post('/booking/createBooking', {
                 UserId: userId,
                 NumTickets: tickets,
-                TotalAmount: 1000,
-                BookingDate: date
+                TotalAmount: 200 * tickets,
+                BookingDate: date,
+                Session: session
             });
             toast.success("Tickets booked successfully");
             navigate('/dashboard');
@@ -56,6 +58,21 @@ const Book = () => {
                         className="px-4 py-2 border rounded-md w-40"
                         required
                     />
+                </div>
+                <div className="mb-4">
+                    <label htmlFor="session" className="font-bold">Session:</label>
+                    <select
+                        name="session"
+                        value={session}
+                        onChange={(e) => setSession(e.target.value)}
+                        className="px-4 py-2 border rounded-md w-40"
+                        required
+                    >
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="evening">Evening</option>
+                        <option value="night">Night</option>
+                    </select>
                 </div>
                 <button type="submit" className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300">Book Tickets</button>
             </form>
