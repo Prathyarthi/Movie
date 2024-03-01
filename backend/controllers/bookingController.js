@@ -21,8 +21,8 @@ export const getAllBookings = async (req, res) => {
 };
 
 export const createBooking = async (req, res) => {
-    const { UserId, NumTickets, TotalAmount, BookingDate } = req.body;
-    console.log(UserId, NumTickets, TotalAmount, BookingDate);
+    const { UserId, NumTickets, TotalAmount, BookingDate, Session } = req.body;
+    console.log(UserId, NumTickets, TotalAmount, BookingDate, Session);
     const connection = await connectToDb();
 
     const currentDate = new Date();
@@ -33,7 +33,7 @@ export const createBooking = async (req, res) => {
         });
     }
 
-    try { 
+    try {
         const [bookingTables] = await connection.query("SHOW TABLES LIKE 'BOOKINGS'");
 
         if (bookingTables.length === 0) {
@@ -44,14 +44,15 @@ export const createBooking = async (req, res) => {
             NumTickets INT,
             TotalAmount INT,
             BookingDate DATE,
-            FOREIGN KEY(UserId) REFERENCES Users(ID),
+            Session VARCHAR(10),
+            FOREIGN KEY(UserId) REFERENCES Users(ID)
             )
             `)
         }
 
-        const createBookingQuery = ('INSERT INTO BOOKINGS (UserId, NumTickets, TotalAmount, BookingDate) VALUES (?, ?, ?, ?)')
+        const createBookingQuery = ('INSERT INTO BOOKINGS (UserId, NumTickets, TotalAmount, BookingDate, Session) VALUES (?, ?, ?, ?, ?)')
 
-        const createBookingQueryValues = [UserId, NumTickets, TotalAmount, BookingDate];
+        const createBookingQueryValues = [UserId, NumTickets, TotalAmount, BookingDate, Session];
 
         await connection.query(createBookingQuery, createBookingQueryValues)
 
