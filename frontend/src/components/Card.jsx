@@ -2,6 +2,7 @@ import React from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 
 function Card({ title, Genre, Duration }) {
+    const role = localStorage.getItem("role")
     const navigate = useNavigate()
     return (
         <>
@@ -13,7 +14,7 @@ function Card({ title, Genre, Duration }) {
                     <div className="w-full bg-[#0095ff] flex flex-col px-3 py-2 rounded-lg">
                         <button onClick={() => {
                             navigate("/book")
-                        }}>Book Now</button>
+                        }}>{role === "admin" ? null : "Book Now"}</button>
                     </div>
                 </div>
             </div>

@@ -3,7 +3,6 @@ import Card from './Card'
 import { useEffect, useState } from 'react'
 import axiosInstance from '../axiosInstance';
 import { Link } from 'react-router-dom';
-import CreateMovie from '../pages/CreateMovie';
 
 function AdminCardContainer() {
     const [movies, setMovies] = useState([])
