@@ -42,7 +42,7 @@ export const Signup = () => {
             })
             response = await response
             // localStorage.setItem("token", response.data.token)
-            navigate('/dashboard')
+            navigate('/signin')
           }} label={"Sign up"} />
         </div>
         <Bottom_warning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />

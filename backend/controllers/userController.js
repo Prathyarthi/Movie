@@ -10,10 +10,15 @@ const signupSchema = zod.object({
     password: zod.string().min(8)
 })
 
+const ROLES = {
+    USER: 'user',
+    ADMIN: 'admin'
+};
 
 const signup = async (req, res) => {
 
     const { username, email, password } = req.body;
+    const role = req.body.role || ROLES.USER;
     const connection = await connectToDb()
 
     try {
@@ -35,7 +40,8 @@ const signup = async (req, res) => {
                     ID INT PRIMARY KEY AUTO_INCREMENT,
                     USERNAME VARCHAR(20),
                     EMAIL VARCHAR(20) UNIQUE,
-                    PASSWORD VARCHAR(20)
+                    PASSWORD VARCHAR(20),
+                    ROLE VARCHAR(20)
                 );
             `);
         }
@@ -55,10 +61,10 @@ const signup = async (req, res) => {
         }
         else {
             const userQuery = (`
-                INSERT INTO USERS (USERNAME,EMAIL,PASSWORD) VALUES (?,?,?)
+                INSERT INTO USERS (USERNAME,EMAIL,PASSWORD,ROLE) VALUES (?,?,?,?)
             `)
 
-            const userValues = [username, email, password]
+            const userValues = [username, email, password, role]
 
             const [user] = await connection.query(userQuery, userValues)
 
@@ -71,6 +77,7 @@ const signup = async (req, res) => {
 
             const token = jwt.sign({
                 userId,
+                role
             }, process.env.JWT_SECRET)
 
             res.cookie("token", token, { httpOnly: true })
@@ -86,6 +93,7 @@ const signup = async (req, res) => {
                 success: true,
                 message: "User created successfully",
                 token: token,
+                role,
                 newUserQuery
             })
         }
@@ -128,6 +136,8 @@ const signin = async (req, res, next) => {
         const userExistsValues = [email]
         const [userExistsQuery] = await connection.query(userExists, userExistsValues);
 
+        const role = userExistsQuery[0].ROLE || ROLES.USER;
+
         if (userExistsQuery.length === 0) {
             res.status(400).json({
                 success: false,
@@ -141,6 +151,7 @@ const signin = async (req, res, next) => {
 
         const token = jwt.sign({
             userId: userExistsQuery[0].ID,
+            role
         }, process.env.JWT_SECRET)
 
         res.cookie("token", token, { httpOnly: true })
@@ -150,6 +161,7 @@ const signin = async (req, res, next) => {
             message: "User logged in successfully",
             userId: userExistsQuery[0].ID,
             token: token,
+            role,
             userExistsQuery
         })
         return

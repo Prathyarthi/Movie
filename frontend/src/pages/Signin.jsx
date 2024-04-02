@@ -40,6 +40,7 @@ function Signin() {
               response = await response
               localStorage.setItem("token", response.data.token)
               localStorage.setItem("userId", response.data.userId)
+              localStorage.setItem("role", response.data.role)
               navigate('/dashboard')
             }}
               label={"Sign in"} />
