@@ -129,7 +129,7 @@ const signin = async (req, res, next) => {
     }
 
     try {
-        const userExists = (`SELECT EMAIL,PASSWORD,ID FROM USERS
+        const userExists = (`SELECT EMAIL,PASSWORD,ID,ROLE FROM USERS
         WHERE EMAIL=?
         `)
 
