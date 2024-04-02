@@ -42,6 +42,7 @@ function Signin() {
               localStorage.setItem("userId", response.data.userId)
               localStorage.setItem("role", response.data.role)
               navigate('/dashboard')
+              window.location.reload()
             }}
               label={"Sign in"} />
           </div>
