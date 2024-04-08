@@ -18,7 +18,7 @@ function CardContainer() {
         <div className='flex justify-center items-center h-screen'>
             {movies.map((data) => {
                 return <Card
-                    title={data.MovieName} Genre={data.Genre} Duration={data.Duration} >
+                    title={data.MovieName} Genre={data.Genre} Duration={"Duration:" + data.Duration} >
                 </Card>
             })}
         </div>

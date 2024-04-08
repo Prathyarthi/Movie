@@ -24,7 +24,7 @@ const Book = () => {
             navigate('/dashboard');
         } catch (error) {
             console.error('Error:', error);
-            toast.error("Failed to book tickets. Please try again.");
+            toast.error("Booking cannot be done in the past. Please try again.");
         }
     }
 
